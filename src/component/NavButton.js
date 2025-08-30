@@ -38,7 +38,7 @@ export default function ListButton() {
         },
       }}
       value={navBots}
-      exclusive
+      exclusive // This prop makes sure only one button can be selected at a time
       onChange={handleChange}
       aria-label="Platform"
       color="white"

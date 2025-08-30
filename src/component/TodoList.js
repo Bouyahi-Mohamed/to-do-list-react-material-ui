@@ -18,6 +18,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import CloseIcon from '@mui/icons-material/Close';
+import Fade from '@mui/material/Fade';
 //import tasks data
 import { TasksContext } from "../Data/Tasks";
 import{ useContext } from "react";
@@ -83,22 +84,47 @@ export function DeleteBtn({ id }) {
         keepMounted
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
+        PaperProps={{
+          sx: {
+            borderRadius: 3,
+            padding: 3,
+            boxShadow: 24,
+          },
+        }}
+        BackdropProps={{
+          sx: {
+            backdropFilter: "blur(4px)",
+          },
+        }}
       >
-        <DialogTitle>{`do you want to delete this item?`}</DialogTitle>
-        <DialogContent>
+        <DialogTitle sx={{ fontWeight: 'medium', color: 'text.primary' }}>
+          <CloseIcon
+            onClick={handleClose}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              cursor: 'pointer',
+            }}
+          />
+          {`Do you want to delete this item?`}
+        </DialogTitle>
+        <DialogContent sx={{ bgcolor: 'background.paper', borderRadius: 2 }}>
           <DialogContentText id="alert-dialog-slide-description">
             This action cannot be undone.
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>No</Button>
+        <DialogActions sx={{ justifyContent: 'space-between', padding: 2 }}>
+          <Button onClick={handleClose} color="inherit">No</Button>
           <Button onClick={()=>{
             handleClose();
             // add delete logic here
             localStorage.setItem('tasks', JSON.stringify(tasks.filter((c) => c.id !== id)));
             setTasks((prev) => prev.filter((c) => c.id !== id));
 
-          }}>Yes</Button>
+          }} color="error" variant="contained">
+            Yes
+          </Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>
@@ -142,10 +168,43 @@ export  function EditBtn({ id }) {
       >
         <EditIcon />
       </IconButton>
-      <Dialog open={open} onClose={handleClose}
-      sx={{width: 800}}>
-        <DialogTitle>would you like to edit this item</DialogTitle>
-        <DialogContent>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        TransitionComponent={Fade}
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+        PaperProps={{
+          sx: {
+            borderRadius: 3,
+            p: 2,
+            minWidth: { xs: 260, sm: 400 },
+            backdropFilter: 'blur(4px)',
+            position: 'relative',
+            mx: 'auto',
+            my: 'auto',
+          },
+        }}
+        BackdropProps={{
+          sx: { backgroundColor: 'rgba(0,0,0,0.25)' },
+        }}
+      >
+        <DialogTitle sx={{ fontWeight: 'medium', color: 'text.primary' }}>
+          <CloseIcon
+            onClick={handleClose}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              cursor: 'pointer',
+            }}
+          />
+          Would you like to edit this item
+        </DialogTitle>
+        <DialogContent sx={{ bgcolor: 'background.paper', borderRadius: 2 }}>
           <form onSubmit={handleSubmit} id="subscription-form">
             <TextField
               autoFocus
@@ -176,13 +235,13 @@ export  function EditBtn({ id }) {
             />
           </form>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
+        <DialogActions sx={{ justifyContent: 'space-between', padding: 2 }}>
+          <Button onClick={handleClose} color="inherit">Cancel</Button>
           <Button type="submit" form="subscription-form" onClick={() => {
             localStorage.setItem('tasks', JSON.stringify(tasks.map((task) => (task.id === id ? editedTask : task))));
             setTasks((prev) => prev.map((task) => (task.id === id ? editedTask : task)));
             handleClose();
-          }}>
+          }} color="primary" variant="contained">
             Update
           </Button>
         </DialogActions>
