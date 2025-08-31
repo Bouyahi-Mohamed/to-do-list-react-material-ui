@@ -20,9 +20,9 @@ import TextField from "@mui/material/TextField";
 import CloseIcon from '@mui/icons-material/Close';
 import Fade from '@mui/material/Fade';
 //import tasks data
-import { TasksContext } from "../Data/Tasks";
+import { TasksContext,SnackBarContext,NavBotsContext } from "../Data/Tasks";
 import{ useContext } from "react";
-import { NavBotsContext } from "../Data/Tasks";
+
 
 
 // Use React state for cards
@@ -56,6 +56,8 @@ export default function TodoList() {
 export function DeleteBtn({ id }) {
   const { tasks, setTasks } = useContext(TasksContext);
   const [open, setOpen] = React.useState(false);
+  const { SnackBarInfo, setSnackBarInfo } = useContext(SnackBarContext);
+
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -63,6 +65,8 @@ export function DeleteBtn({ id }) {
 
   const handleClose = () => {
     setOpen(false);
+    setSnackBarInfo({ ...SnackBarInfo, open: true, message: "Delete dialog closed", severity: "info" });
+
   };
 
   return (
@@ -121,6 +125,7 @@ export function DeleteBtn({ id }) {
             // add delete logic here
             localStorage.setItem('tasks', JSON.stringify(tasks.filter((c) => c.id !== id)));
             setTasks((prev) => prev.filter((c) => c.id !== id));
+            setSnackBarInfo({ ...SnackBarInfo, open: true, message: "Task deleted successfully!", severity: "success" });
 
           }} color="error" variant="contained">
             Yes
@@ -137,6 +142,8 @@ export  function EditBtn({ id }) {
   const [open, setOpen] = React.useState(false);
   const { tasks, setTasks } = useContext(TasksContext);
   const [editedTask, setEditedTask] = React.useState(tasks.find(t => t.id === id) || {title: '', description: '', state: false});
+  const { SnackBarInfo, setSnackBarInfo } = useContext(SnackBarContext);
+
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -144,6 +151,7 @@ export  function EditBtn({ id }) {
 
   const handleClose = () => {
     setOpen(false);
+    setSnackBarInfo({ ...SnackBarInfo, open: true, message: "Edit dialog closed", severity: "info" });
   };
 
   const handleSubmit = (event) => {
@@ -241,6 +249,7 @@ export  function EditBtn({ id }) {
             localStorage.setItem('tasks', JSON.stringify(tasks.map((task) => (task.id === id ? editedTask : task))));
             setTasks((prev) => prev.map((task) => (task.id === id ? editedTask : task)));
             handleClose();
+            setSnackBarInfo({ ...SnackBarInfo, open: true, message: "Task updated successfully!", severity: "success" });
           }} color="primary" variant="contained">
             Update
           </Button>
@@ -254,6 +263,8 @@ export  function EditBtn({ id }) {
 function CheckBtn({ id }) {
   const { tasks, setTasks } = useContext(TasksContext);
   const task = tasks.find((t) => t.id === id);
+  const { SnackBarInfo, setSnackBarInfo } = useContext(SnackBarContext);
+
   if (!task) return null;
 
   return (
@@ -279,6 +290,7 @@ function CheckBtn({ id }) {
               c.id === task.id ? { ...c, state: !c.state } : c
             )
           );
+          setSnackBarInfo({ ...SnackBarInfo, open: true, message: task.state ? "Task marked as undone!" : "Task marked as done!", severity: "success" });
         }}
       >
         {task.state ? <CloseIcon /> : <CheckIcon />}

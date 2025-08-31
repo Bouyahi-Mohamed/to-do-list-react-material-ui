@@ -3,18 +3,21 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
 import { useContext,useState } from "react";
-import { TasksContext } from "../Data/Tasks";
+import { TasksContext ,SnackBarContext} from "../Data/Tasks";
+
 
 
 export default function AddTask() {
   const { tasks, setTasks } = useContext(TasksContext);
   const [newTask, setNewTask] = useState({ title: "", description: "", state: false });
+  const { SnackBarInfo, setSnackBarInfo } = useContext(SnackBarContext);
 
   const handleAddTask = (event) => {
     event.preventDefault();
     setTasks([...tasks, { ...newTask, id: crypto.randomUUID() }]);
     setNewTask({ title: "", description: "", state: false });
     localStorage.setItem('tasks', JSON.stringify([...tasks, { ...newTask, id: crypto.randomUUID() }]));
+    setSnackBarInfo({ ...SnackBarInfo, open: true, message: "Task added successfully!", severity: "success" });
   };
 
   return (

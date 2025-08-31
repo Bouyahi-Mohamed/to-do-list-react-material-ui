@@ -22,4 +22,5 @@ const tasks = [
 
 const TasksContext = createContext({ tasks: [], setTasks: () => {} });
 const NavBotsContext = createContext({ navBots: 'all', setNavBots: () => {} });
-export { TasksContext, tasks, NavBotsContext };
+const SnackBarContext = createContext({ open: false, message: '', severity: 'success' });
+export { TasksContext, tasks, NavBotsContext, SnackBarContext };
