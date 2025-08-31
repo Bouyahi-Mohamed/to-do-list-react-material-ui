@@ -2,14 +2,16 @@ import * as React from 'react';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Box from '@mui/material/Box';
-import { NavBotsContext } from '../Data/Tasks';
+import { NavBotsContext,SnackBarContext } from '../Data/Tasks';
 import { useContext } from 'react';
 export default function ListButton() {
   const { navBots, setNavBots } = useContext(NavBotsContext);
+  const { SnackBarInfo, setSnackBarInfo } = useContext(SnackBarContext);
 
   const handleChange = (event, newAlignment) => {
     if (newAlignment !== null) {
       setNavBots(newAlignment);
+      setSnackBarInfo({ ...SnackBarInfo, open: true, message: `Navigation set to ${newAlignment}`, severity: "info" });
     }
   };
 

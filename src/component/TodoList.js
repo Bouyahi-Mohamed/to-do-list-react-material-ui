@@ -65,7 +65,7 @@ export function DeleteBtn({ id }) {
 
   const handleClose = () => {
     setOpen(false);
-    setSnackBarInfo({ ...SnackBarInfo, open: true, message: "Delete dialog closed", severity: "info" });
+   
 
   };
 
@@ -151,7 +151,6 @@ export  function EditBtn({ id }) {
 
   const handleClose = () => {
     setOpen(false);
-    setSnackBarInfo({ ...SnackBarInfo, open: true, message: "Edit dialog closed", severity: "info" });
   };
 
   const handleSubmit = (event) => {
