@@ -20,7 +20,7 @@ import TextField from "@mui/material/TextField";
 import CloseIcon from '@mui/icons-material/Close';
 import Fade from '@mui/material/Fade';
 //import tasks data
-import { TasksContext,SnackBarContext,NavBotsContext } from "../Data/Tasks";
+import { TasksContext,SnackBarContext,NavBotsContext,DialogDeleteContext,DialogEditContext} from "../context/Tasks";
 import{ useContext } from "react";
 
 
@@ -55,22 +55,31 @@ export default function TodoList() {
 // delete task button with dialog
 export function DeleteBtn({ id }) {
   const { tasks, setTasks } = useContext(TasksContext);
-  const [open, setOpen] = React.useState(false);
   const { SnackBarInfo, setSnackBarInfo } = useContext(SnackBarContext);
+  const { DialogDeleteInfo, setDialogDeleteInfo } = useContext(DialogDeleteContext);
 
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-   
-
-  };
+const handleDeleteClick = () => {
+  setDialogDeleteInfo({
+    ...DialogDeleteInfo,
+    open: true,
+    id: id,
+    title: 'Delete Task',
+    message: 'Are you sure you want to delete this task?',
+    handleAction: () => {
+      setDialogDeleteInfo({ ...DialogDeleteInfo, open: false });
+      // delete logic here
+      setTasks((prev) => {
+        const updatedTasks = prev.filter((c) => c.id !== id);
+        localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+        return updatedTasks;
+      });
+      setSnackBarInfo({ ...SnackBarInfo, open: true, message: "Task deleted successfully!", severity: "success" });
+    }
+  });
+};
 
   return (
-    <React.Fragment>
+    <>
       <IconButton
         sx={{
           backgroundColor: "#ffffffff",
@@ -79,91 +88,50 @@ export function DeleteBtn({ id }) {
         }}
         aria-label="delete"
         variant="outlined"
-        onClick={handleClickOpen}
+        onClick={handleDeleteClick}
       >
         <DeleteIcon />
       </IconButton>
-      <Dialog
-        open={open}
-        keepMounted
-        onClose={handleClose}
-        aria-describedby="alert-dialog-slide-description"
-        PaperProps={{
-          sx: {
-            borderRadius: 3,
-            padding: 3,
-            boxShadow: 24,
-          },
-        }}
-        BackdropProps={{
-          sx: {
-            backdropFilter: "blur(4px)",
-          },
-        }}
-      >
-        <DialogTitle sx={{ fontWeight: 'medium', color: 'text.primary' }}>
-          <CloseIcon
-            onClick={handleClose}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: 8,
-              cursor: 'pointer',
-            }}
-          />
-          {`Do you want to delete this item?`}
-        </DialogTitle>
-        <DialogContent sx={{ bgcolor: 'background.paper', borderRadius: 2 }}>
-          <DialogContentText id="alert-dialog-slide-description">
-            This action cannot be undone.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions sx={{ justifyContent: 'space-between', padding: 2 }}>
-          <Button onClick={handleClose} color="inherit">No</Button>
-          <Button onClick={()=>{
-            handleClose();
-            // add delete logic here
-            localStorage.setItem('tasks', JSON.stringify(tasks.filter((c) => c.id !== id)));
-            setTasks((prev) => prev.filter((c) => c.id !== id));
-            setSnackBarInfo({ ...SnackBarInfo, open: true, message: "Task deleted successfully!", severity: "success" });
-
-          }} color="error" variant="contained">
-            Yes
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </React.Fragment>
+     
+    </>
   );
 }
 
 // update task button with dialog
 
 export  function EditBtn({ id }) {
-  const [open, setOpen] = React.useState(false);
-  const { tasks, setTasks } = useContext(TasksContext);
-  const [editedTask, setEditedTask] = React.useState(tasks.find(t => t.id === id) || {title: '', description: '', state: false});
   const { SnackBarInfo, setSnackBarInfo } = useContext(SnackBarContext);
-
+  const { DialogEditInfo, setDialogEditInfo } = useContext(DialogEditContext);
+  const { tasks, setTasks } = useContext(TasksContext);
 
   const handleClickOpen = () => {
-    setOpen(true);
+    const taskToEdit = tasks.find(t => t.id === id);
+    setDialogEditInfo({
+      ...DialogEditInfo,
+      open: true,
+      id: id,
+      title: 'Edit Task',
+      titletodo: taskToEdit.title || '',
+      description: taskToEdit.description || '',
+      handleAction: (updatedTitle, updatedDescription) => {
+        setDialogEditInfo({ ...DialogEditInfo, open: false });
+        // update logic here
+        setTasks((prev) => {
+          let updatetasks = prev.map((c) =>
+            c.id === id ? { ...c, title: updatedTitle, description: updatedDescription } : c
+          );
+          localStorage.setItem('tasks', JSON.stringify(updatetasks));
+          return updatetasks;
+        });
+        setSnackBarInfo({ ...SnackBarInfo, open: true, message: "Task updated successfully!", severity: "success" });
+
+      }
+    });
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const formJson = Object.fromEntries(formData.entries());
-    const email = formJson.email;
-    console.log(email);
-    handleClose();
-  };
 
   return (
-    <React.Fragment>
+    <>
       <IconButton
         sx={{
           backgroundColor: "#ffffffff",
@@ -175,86 +143,7 @@ export  function EditBtn({ id }) {
       >
         <EditIcon />
       </IconButton>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        TransitionComponent={Fade}
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-        PaperProps={{
-          sx: {
-            borderRadius: 3,
-            p: 2,
-            minWidth: { xs: 260, sm: 400 },
-            backdropFilter: 'blur(4px)',
-            position: 'relative',
-            mx: 'auto',
-            my: 'auto',
-          },
-        }}
-        BackdropProps={{
-          sx: { backgroundColor: 'rgba(0,0,0,0.25)' },
-        }}
-      >
-        <DialogTitle sx={{ fontWeight: 'medium', color: 'text.primary' }}>
-          <CloseIcon
-            onClick={handleClose}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: 8,
-              cursor: 'pointer',
-            }}
-          />
-          Would you like to edit this item
-        </DialogTitle>
-        <DialogContent sx={{ bgcolor: 'background.paper', borderRadius: 2 }}>
-          <form onSubmit={handleSubmit} id="subscription-form">
-            <TextField
-              autoFocus
-              required
-              margin="dense"
-              id="title"
-              name="title"
-              label="title"
-              type="text"
-              fullWidth
-              variant="standard"
-              value={editedTask.title}
-              onChange={(e) => setEditedTask({ ...editedTask, title: e.target.value })}
-          
-            />
-            <TextField
-              autoFocus
-              required
-              margin="dense"
-              id="description"
-              name="description"
-              label="description"
-              type="text"
-              fullWidth
-              variant="standard"
-              value={editedTask.description}
-              onChange={(e) => {setEditedTask({ ...editedTask, description: e.target.value });}}
-            />
-          </form>
-        </DialogContent>
-        <DialogActions sx={{ justifyContent: 'space-between', padding: 2 }}>
-          <Button onClick={handleClose} color="inherit">Cancel</Button>
-          <Button type="submit" form="subscription-form" onClick={() => {
-            localStorage.setItem('tasks', JSON.stringify(tasks.map((task) => (task.id === id ? editedTask : task))));
-            setTasks((prev) => prev.map((task) => (task.id === id ? editedTask : task)));
-            handleClose();
-            setSnackBarInfo({ ...SnackBarInfo, open: true, message: "Task updated successfully!", severity: "success" });
-          }} color="primary" variant="contained">
-            Update
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </React.Fragment>
+    </>
   );
 }
   
@@ -267,7 +156,7 @@ function CheckBtn({ id }) {
   if (!task) return null;
 
   return (
-    <React.Fragment>
+    <>
       <IconButton
         sx={{
           backgroundColor: "#ffffffff",
@@ -294,14 +183,14 @@ function CheckBtn({ id }) {
       >
         {task.state ? <CloseIcon /> : <CheckIcon />}
       </IconButton>
-    </React.Fragment>
+    </>
   );
 }
 
 // function that renders the todo list depending on the selected filter
 export function RenderTodoList({ tasks, navBots, selectedCard, setTasks }) {
   return (
-    <React.Fragment>
+    <>
       {tasks
         .filter((task) => {
           if (navBots === "undone") {
@@ -312,9 +201,9 @@ export function RenderTodoList({ tasks, navBots, selectedCard, setTasks }) {
           return true;
         })
         .map((task, index) => (
-          <TodoCard  task={task} setTasks={setTasks} selectedCard={selectedCard} index={index}/>
+          <TodoCard key={task.id} task={task} setTasks={setTasks} selectedCard={selectedCard} index={index}/>
         ))}
-    </React.Fragment>
+    </>
   );
 }
 
@@ -323,7 +212,7 @@ export function RenderTodoList({ tasks, navBots, selectedCard, setTasks }) {
 function TodoCard({ task, setTasks ,selectedCard,index}) {
   
   return (
-    <React.Fragment>
+    <>
        <Card key={task.id}>
           <CardActionArea
             data-active={selectedCard === index ? "" : undefined}
@@ -354,7 +243,7 @@ function TodoCard({ task, setTasks ,selectedCard,index}) {
           </CardActionArea>
         </Card>
 
-      </React.Fragment>
+      </>
 
   )
 }

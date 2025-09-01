@@ -5,7 +5,9 @@ import Title from './component/Title';
 import ListButton from './component/NavButton';
 import AddTask from './component/AddTask';
 import SnackBar from './component/SneakBar';
-import {TasksContext,NavBotsContext,SnackBarContext} from './Data/Tasks';
+import DialogDelete from './component/DialogDelete';
+import DialogEdit from './component/DialogEdit';
+import {TasksContext,NavBotsContext,SnackBarContext,DialogDeleteContext,DialogEditContext} from './context/Tasks';
 import { useState } from 'react';
 const storedTasks = JSON.parse(localStorage.getItem('tasks')) || [];
 const navbarStorage = JSON.parse(localStorage.getItem('navbar')) || 'all';
@@ -13,6 +15,8 @@ function App() {
   const [navBots, setNavBots] = useState(navbarStorage);
   const [tasks, setTasks] = useState(storedTasks);
   const [SnackBarInfo, setSnackBarInfo] = useState({ open: false, message: '', severity: 'success' });
+  const [DialogDeleteInfo, setDialogDeleteInfo] = useState({ open: false, title: '', message: '', handleAction: () => {} });
+  const [DialogEditInfo, setDialogEditInfo] = useState({ open: false, id: null, title: '', titletodo: '', description: '', handleAction: () => {} });
 
   return (
     <NavBotsContext.Provider value={{navBots, setNavBots}}>
@@ -22,8 +26,14 @@ function App() {
         <SnackBar />
         <Title />
         <ListButton />
-        <TodoList />
-        <AddTask />
+        <DialogDeleteContext.Provider value={{ DialogDeleteInfo, setDialogDeleteInfo }}>
+         <DialogEditContext.Provider value={{ DialogEditInfo, setDialogEditInfo }}>
+          <DialogEdit />
+          <DialogDelete />
+          <TodoList />
+        </DialogEditContext.Provider>
+        </DialogDeleteContext.Provider>
+          <AddTask />
       </RootContainer>
     </SnackBarContext.Provider>
   </TasksContext.Provider>

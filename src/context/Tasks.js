@@ -23,4 +23,6 @@ const tasks = [
 const TasksContext = createContext({ tasks: [], setTasks: () => {} });
 const NavBotsContext = createContext({ navBots: 'all', setNavBots: () => {} });
 const SnackBarContext = createContext({ open: false, message: '', severity: 'success' });
-export { TasksContext, tasks, NavBotsContext, SnackBarContext };
+const DialogDeleteContext = createContext({ open: false, id: null, title: '', message: '', handleAction: () => {} });
+const DialogEditContext = createContext({ open: false, id: null, title: '', titletodo:'',description: '', handleAction: () => {} });
+export { TasksContext, tasks, NavBotsContext, SnackBarContext, DialogDeleteContext, DialogEditContext };
