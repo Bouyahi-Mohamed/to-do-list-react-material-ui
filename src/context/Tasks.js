@@ -48,9 +48,9 @@ const SnackBarProvider = ({ children }) => {
 
 // === start DialogDelete Provider ===
 const DialogDeleteProvider = ({ children }) => {
-  const [dialogDelete, setDialogDelete] = useState({ open: false, id: null, title: '', message: '', handleAction: () => {} });
+  const [DialogDeleteInfo, setDialogDeleteInfo] = useState({ open: false, id: null, title: '', message: '', handleAction: () => {} });
   return (
-    <DialogDeleteContext.Provider value={{ dialogDelete, setDialogDelete }}>
+    <DialogDeleteContext.Provider value={{ DialogDeleteInfo, setDialogDeleteInfo }}>
       {children}
     </DialogDeleteContext.Provider>
   );
@@ -59,9 +59,9 @@ const DialogDeleteProvider = ({ children }) => {
 
 // === start DialogEdit Provider ===
 const DialogEditProvider = ({ children }) => {
-  const [dialogEdit, setDialogEdit] = useState({ open: false, id: null, title: '', titletodo:'',description: '', handleAction: () => {} });
+  const [DialogEditInfo, setDialogEditInfo] = useState({ open: false, id: null, title: '', titletodo:'',description: '', handleAction: () => {} });
   return (
-    <DialogEditContext.Provider value={{ dialogEdit, setDialogEdit }}>
+    <DialogEditContext.Provider value={{ DialogEditInfo, setDialogEditInfo }}>
       {children}
     </DialogEditContext.Provider>
   );

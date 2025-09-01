@@ -23,13 +23,13 @@ function App() {
         <SnackBar />
         <Title />
         <ListButton />
-        <DialogDeleteContext.Provider value={{ DialogDeleteInfo, setDialogDeleteInfo }}>
-         <DialogEditContext.Provider value={{ DialogEditInfo, setDialogEditInfo }}>
+        <DialogDeleteProvider>
+         <DialogEditProvider>
           <DialogEdit />
           <DialogDelete />
           <TodoList />
-        </DialogEditContext.Provider>
-        </DialogDeleteContext.Provider>
+        </DialogEditProvider>
+        </DialogDeleteProvider>
           <AddTask />
       </RootContainer>
     </SnackBarProvider>
