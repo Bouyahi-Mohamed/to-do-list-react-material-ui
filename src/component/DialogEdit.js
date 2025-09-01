@@ -1,15 +1,15 @@
-import { useContext, useState, useEffect } from 'react';
+import {  useState, useEffect } from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import CloseIcon from '@mui/icons-material/Close';
-import { DialogEditContext,Tasks } from  "../context/Tasks";
+import { useDialogEdit } from  "../context/Tasks";
 import TextField from "@mui/material/TextField";
 import Fade from '@mui/material/Fade';
 
 export default function DialogEdit() {
-  const { DialogEditInfo, setDialogEditInfo } = useContext(DialogEditContext);
+  const { DialogEditInfo, setDialogEditInfo } = useDialogEdit();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 

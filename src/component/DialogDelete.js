@@ -8,11 +8,11 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import CloseIcon from '@mui/icons-material/Close';
-import { DialogDeleteContext } from '../context/Tasks';
+import { useDialogDelete } from '../context/Tasks';
 
 
 export default function DialogDelete() {
-  const { DialogDeleteInfo, setDialogDeleteInfo } = useContext(DialogDeleteContext);
+  const { DialogDeleteInfo, setDialogDeleteInfo } = useDialogDelete();
   function handleClose() {
     setDialogDeleteInfo({ ...DialogDeleteInfo, open: false });
   }

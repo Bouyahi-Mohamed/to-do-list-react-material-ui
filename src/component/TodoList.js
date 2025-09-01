@@ -1,4 +1,3 @@
-import * as React from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -12,16 +11,16 @@ import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import CloseIcon from '@mui/icons-material/Close';
 //import tasks data
-import { TasksContext,SnackBarContext,NavBotsContext,DialogDeleteContext,DialogEditContext} from "../context/Tasks";
-import{ useContext } from "react";
+import { useTasks,useSnackBar,useNavBots,useDialogDelete,useDialogEdit} from "../context/Tasks";
+import{ useState } from "react";
 
 
 
 // Use React state for cards
 export default function TodoList() {
-  const { tasks, setTasks } = useContext(TasksContext);
-  const { navBots } = useContext(NavBotsContext);
-  const [selectedCard, setSelectedCard] = React.useState(0);
+  const { tasks, setTasks } = useTasks();
+  const { navBots } = useNavBots();
+  const [selectedCard, setSelectedCard] = useState(0);
   return (
     <Box
       sx={{
@@ -46,9 +45,9 @@ export default function TodoList() {
 
 // delete task button with dialog
 export function DeleteBtn({ id }) {
-  const { tasks, setTasks } = useContext(TasksContext);
-  const { SnackBarInfo, setSnackBarInfo } = useContext(SnackBarContext);
-  const { DialogDeleteInfo, setDialogDeleteInfo } = useContext(DialogDeleteContext);
+  const { tasks, setTasks } = useTasks();
+  const { SnackBarInfo, setSnackBarInfo } = useSnackBar();
+  const { DialogDeleteInfo, setDialogDeleteInfo } = useDialogDelete();
 
 const handleDeleteClick = () => {
   setDialogDeleteInfo({
@@ -92,9 +91,9 @@ const handleDeleteClick = () => {
 // update task button with dialog
 
 export  function EditBtn({ id }) {
-  const { SnackBarInfo, setSnackBarInfo } = useContext(SnackBarContext);
-  const { DialogEditInfo, setDialogEditInfo } = useContext(DialogEditContext);
-  const { tasks, setTasks } = useContext(TasksContext);
+  const { SnackBarInfo, setSnackBarInfo } = useSnackBar();
+  const { DialogEditInfo, setDialogEditInfo } = useDialogEdit();
+  const { tasks, setTasks } = useTasks();
 
   const handleClickOpen = () => {
     const taskToEdit = tasks.find(t => t.id === id);
@@ -141,9 +140,9 @@ export  function EditBtn({ id }) {
   
 // check button that defines that action done or undone
 function CheckBtn({ id }) {
-  const { tasks, setTasks } = useContext(TasksContext);
+  const { tasks, setTasks } = useTasks();
   const task = tasks.find((t) => t.id === id);
-  const { SnackBarInfo, setSnackBarInfo } = useContext(SnackBarContext);
+  const { SnackBarInfo, setSnackBarInfo } = useSnackBar();
 
   if (!task) return null;
 

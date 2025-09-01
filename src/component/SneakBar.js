@@ -1,10 +1,9 @@
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import { SnackBarContext } from '../context/Tasks';
-import { useContext } from 'react';
+import { useSnackBar } from '../context/Tasks';
 
 export default function Snackbars() {
-  const { SnackBarInfo , setSnackBarInfo } = useContext(SnackBarContext);
+  const { SnackBarInfo , setSnackBarInfo } = useSnackBar();
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;

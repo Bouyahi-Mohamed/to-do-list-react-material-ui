@@ -68,4 +68,27 @@ const DialogEditProvider = ({ children }) => {
 };
 // === end DialogEdit Provider ===
 
-export { TasksContext, NavBotsContext, SnackBarContext, DialogDeleteContext, DialogEditContext, TasksProvider, NavBotsProvider, SnackBarProvider, DialogDeleteProvider, DialogEditProvider };
+// === start custom hooks ===
+const useTasks = () => {
+  return useContext(TasksContext);
+};
+
+const useNavBots = () => {
+  return useContext(NavBotsContext);
+};
+
+const useSnackBar = () => {
+  return useContext(SnackBarContext);
+};
+
+const useDialogDelete = () => {
+  return useContext(DialogDeleteContext);
+};
+
+const useDialogEdit = () => {
+  return useContext(DialogEditContext);
+};
+
+// === end custom hooks ===
+
+export { TasksContext, NavBotsContext, SnackBarContext, DialogDeleteContext, DialogEditContext, TasksProvider, NavBotsProvider, SnackBarProvider, DialogDeleteProvider, DialogEditProvider, useTasks, useNavBots, useSnackBar, useDialogDelete, useDialogEdit };

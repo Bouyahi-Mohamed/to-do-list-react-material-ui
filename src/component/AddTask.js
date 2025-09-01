@@ -1,15 +1,15 @@
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
-import { useContext,useState } from "react";
-import { TasksContext ,SnackBarContext} from "../context/Tasks";
+import { useState } from "react";
+import { useTasks ,useSnackBar} from "../context/Tasks";
 
 
 
 export default function AddTask() {
-  const { tasks, setTasks } = useContext(TasksContext);
+  const { tasks, setTasks } = useTasks();
   const [newTask, setNewTask] = useState({ title: "", description: "", state: false });
-  const { SnackBarInfo, setSnackBarInfo } = useContext(SnackBarContext);
+  const { SnackBarInfo, setSnackBarInfo } = useSnackBar();
 
   const handleAddTask = (event) => {
     event.preventDefault();
