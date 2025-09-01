@@ -1,28 +1,71 @@
-import { createContext , useContext} from "react";
-const tasks = [
-  {
-    id: 1,
-    title: "do gym",
-    description: "I have to do back",
-    state: true
-  },
-  {
-    id: 2,
-    title: "feed my Animals",
-    description: "Animals are a part of nature.",
-    state: true
-  },
-  {
-    id: 3,
-    title: "call my family",
-    description: "Humans depend on plants and animals for survival.",
-    state: false
-  },
-];
+import { createContext , useContext,useState } from "react";
 
-const TasksContext = createContext({ tasks: [], setTasks: () => {} });
-const NavBotsContext = createContext({ navBots: 'all', setNavBots: () => {} });
+// === start localStorage content ===
+const storedTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+const navbarStorage = JSON.parse(localStorage.getItem('navbar')) || 'all';
+// === end localStorage content ===
+
+// === start createContext ===
+const TasksContext = createContext({ tasks: storedTasks, setTasks: () => {} });
+const NavBotsContext = createContext({ navBots: navbarStorage, setNavBots: () => {} });
 const SnackBarContext = createContext({ open: false, message: '', severity: 'success' });
 const DialogDeleteContext = createContext({ open: false, id: null, title: '', message: '', handleAction: () => {} });
 const DialogEditContext = createContext({ open: false, id: null, title: '', titletodo:'',description: '', handleAction: () => {} });
-export { TasksContext, tasks, NavBotsContext, SnackBarContext, DialogDeleteContext, DialogEditContext };
+// === end createContext ===
+
+// === start Tasks Provider ===
+const TasksProvider = ({ children }) => {
+  const [tasks, setTasks] = useState(storedTasks);
+  return (
+    <TasksContext.Provider value={{ tasks, setTasks }}>
+      {children}
+    </TasksContext.Provider>
+  );
+};
+// === end Tasks Provider ===
+
+// === start NavBots Provider ===
+const NavBotsProvider = ({ children }) => {
+  const [navBots, setNavBots] = useState(navbarStorage);
+  return (
+    <NavBotsContext.Provider value={{ navBots, setNavBots }}>
+      {children}
+    </NavBotsContext.Provider>
+  );
+};
+// === end navBots Provider ===
+
+// === start SnackBar Provider ===
+const SnackBarProvider = ({ children }) => {
+  const [SnackBarInfo, setSnackBarInfo] = useState({ open: false, message: '', severity: 'success' });
+  return (
+    <SnackBarContext.Provider value={{ SnackBarInfo, setSnackBarInfo }}>
+      {children}
+    </SnackBarContext.Provider>
+  );
+};
+// === end SnackBar Provider ===
+
+// === start DialogDelete Provider ===
+const DialogDeleteProvider = ({ children }) => {
+  const [dialogDelete, setDialogDelete] = useState({ open: false, id: null, title: '', message: '', handleAction: () => {} });
+  return (
+    <DialogDeleteContext.Provider value={{ dialogDelete, setDialogDelete }}>
+      {children}
+    </DialogDeleteContext.Provider>
+  );
+};
+// === end DialogDelete Provider ===
+
+// === start DialogEdit Provider ===
+const DialogEditProvider = ({ children }) => {
+  const [dialogEdit, setDialogEdit] = useState({ open: false, id: null, title: '', titletodo:'',description: '', handleAction: () => {} });
+  return (
+    <DialogEditContext.Provider value={{ dialogEdit, setDialogEdit }}>
+      {children}
+    </DialogEditContext.Provider>
+  );
+};
+// === end DialogEdit Provider ===
+
+export { TasksContext, NavBotsContext, SnackBarContext, DialogDeleteContext, DialogEditContext, TasksProvider, NavBotsProvider, SnackBarProvider, DialogDeleteProvider, DialogEditProvider };
