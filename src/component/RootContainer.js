@@ -3,7 +3,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { GlobalStyles } from '@mui/material';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import { DisplaySettings } from '@mui/icons-material';
 
 export default function RootContainer({ children }) {
   return (

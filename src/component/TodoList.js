@@ -10,15 +10,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import TextField from "@mui/material/TextField";
 import CloseIcon from '@mui/icons-material/Close';
-import Fade from '@mui/material/Fade';
 //import tasks data
 import { TasksContext,SnackBarContext,NavBotsContext,DialogDeleteContext,DialogEditContext} from "../context/Tasks";
 import{ useContext } from "react";
