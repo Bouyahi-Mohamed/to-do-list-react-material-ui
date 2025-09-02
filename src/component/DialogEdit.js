@@ -4,7 +4,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import CloseIcon from '@mui/icons-material/Close';
-import { useDialogEdit } from  "../context/Tasks";
+import { useDialogEdit } from  "../context/contextTasks";
 import TextField from "@mui/material/TextField";
 import Fade from '@mui/material/Fade';
 

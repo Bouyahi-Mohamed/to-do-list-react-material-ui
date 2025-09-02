@@ -8,7 +8,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import CloseIcon from '@mui/icons-material/Close';
-import { useDialogDelete } from '../context/Tasks';
+import { useDialogDelete } from '../context/contextTasks';
 
 
 export default function DialogDelete() {

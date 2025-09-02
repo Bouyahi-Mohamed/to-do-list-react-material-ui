@@ -11,14 +11,14 @@ import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import CloseIcon from '@mui/icons-material/Close';
 //import tasks data
-import { useTasks,useSnackBar,useNavBots,useDialogDelete,useDialogEdit} from "../context/Tasks";
+import { useTasks,useSnackBar,useNavBots,useDialogDelete,useDialogEdit} from "../context/contextTasks";
 import{ useState } from "react";
 
 
 
 // Use React state for cards
 export default function TodoList() {
-  const { tasks, setTasks } = useTasks();
+  const { tasks, dispatch } = useTasks();
   const { navBots } = useNavBots();
   const [selectedCard, setSelectedCard] = useState(0);
   return (
@@ -35,9 +35,8 @@ export default function TodoList() {
         alignContent: "flex-start",
 
       }}>
-    
-      <RenderTodoList tasks={tasks} navBots={navBots} selectedCard={selectedCard} setTasks={setTasks}/>
-     
+
+  <RenderTodoList tasks={tasks.tasks} navBots={navBots} selectedCard={selectedCard} dispatch={dispatch}/>
 
     </Box>
   );
@@ -45,7 +44,7 @@ export default function TodoList() {
 
 // delete task button with dialog
 export function DeleteBtn({ id }) {
-  const { tasks, setTasks } = useTasks();
+  const { tasks, dispatch } = useTasks();
   const { SnackBarInfo, setSnackBarInfo } = useSnackBar();
   const { DialogDeleteInfo, setDialogDeleteInfo } = useDialogDelete();
 
@@ -59,11 +58,7 @@ const handleDeleteClick = () => {
     handleAction: () => {
       setDialogDeleteInfo({ ...DialogDeleteInfo, open: false });
       // delete logic here
-      setTasks((prev) => {
-        const updatedTasks = prev.filter((c) => c.id !== id);
-        localStorage.setItem('tasks', JSON.stringify(updatedTasks));
-        return updatedTasks;
-      });
+      dispatch({ type: 'REMOVE_TASK', payload: id });
       setSnackBarInfo({ ...SnackBarInfo, open: true, message: "Task deleted successfully!", severity: "success" });
     }
   });
@@ -93,10 +88,10 @@ const handleDeleteClick = () => {
 export  function EditBtn({ id }) {
   const { SnackBarInfo, setSnackBarInfo } = useSnackBar();
   const { DialogEditInfo, setDialogEditInfo } = useDialogEdit();
-  const { tasks, setTasks } = useTasks();
+  const { tasks, dispatch } = useTasks();
 
   const handleClickOpen = () => {
-    const taskToEdit = tasks.find(t => t.id === id);
+    const taskToEdit = tasks.tasks.find(t => t.id === id);
     setDialogEditInfo({
       ...DialogEditInfo,
       open: true,
@@ -107,13 +102,7 @@ export  function EditBtn({ id }) {
       handleAction: (updatedTitle, updatedDescription) => {
         setDialogEditInfo({ ...DialogEditInfo, open: false });
         // update logic here
-        setTasks((prev) => {
-          let updatetasks = prev.map((c) =>
-            c.id === id ? { ...c, title: updatedTitle, description: updatedDescription } : c
-          );
-          localStorage.setItem('tasks', JSON.stringify(updatetasks));
-          return updatetasks;
-        });
+        dispatch({ type: 'EDIT_TASK', payload: { id: taskToEdit.id, title: updatedTitle, description: updatedDescription } });
         setSnackBarInfo({ ...SnackBarInfo, open: true, message: "Task updated successfully!", severity: "success" });
 
       }
@@ -140,8 +129,8 @@ export  function EditBtn({ id }) {
   
 // check button that defines that action done or undone
 function CheckBtn({ id }) {
-  const { tasks, setTasks } = useTasks();
-  const task = tasks.find((t) => t.id === id);
+  const { tasks, dispatch } = useTasks();
+  const task = tasks.tasks.find((t) => t.id === id);
   const { SnackBarInfo, setSnackBarInfo } = useSnackBar();
 
   if (!task) return null;
@@ -159,16 +148,12 @@ function CheckBtn({ id }) {
           localStorage.setItem(
             "tasks",
             JSON.stringify(
-              tasks.map((c) =>
+              tasks.tasks.map((c) =>
                 c.id === task.id ? { ...c, state: !c.state } : c
               )
             )
           );
-          setTasks((prev) =>
-            prev.map((c) =>
-              c.id === task.id ? { ...c, state: !c.state } : c
-            )
-          );
+          dispatch({ type: 'EDIT_TASK', payload: { id: task.id, state: !task.state } });
           setSnackBarInfo({ ...SnackBarInfo, open: true, message: task.state ? "Task marked as undone!" : "Task marked as done!", severity: "success" });
         }}
       >

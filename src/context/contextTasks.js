@@ -1,4 +1,5 @@
-import { createContext , useContext,useState } from "react";
+import { createContext , useContext,useState ,useReducer} from "react";
+import tasksReducer from "../reducer/reducerTasks";
 
 // === start localStorage content ===
 const storedTasks = JSON.parse(localStorage.getItem('tasks')) || [];
@@ -15,9 +16,9 @@ const DialogEditContext = createContext({ open: false, id: null, title: '', titl
 
 // === start Tasks Provider ===
 const TasksProvider = ({ children }) => {
-  const [tasks, setTasks] = useState(storedTasks);
+  const [tasks, dispatch] = useReducer(tasksReducer, { tasks: storedTasks });
   return (
-    <TasksContext.Provider value={{ tasks, setTasks }}>
+    <TasksContext.Provider value={{ tasks, dispatch }}>
       {children}
     </TasksContext.Provider>
   );

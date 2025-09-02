@@ -1,21 +1,21 @@
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
-import { useState } from "react";
-import { useTasks ,useSnackBar} from "../context/Tasks";
+import { useState ,useReducer } from "react";
+import { useTasks ,useSnackBar} from "../context/contextTasks";
+
 
 
 
 export default function AddTask() {
-  const { tasks, setTasks } = useTasks();
+    const { state, dispatch } = useTasks();
   const [newTask, setNewTask] = useState({ title: "", description: "", state: false });
   const { SnackBarInfo, setSnackBarInfo } = useSnackBar();
 
   const handleAddTask = (event) => {
     event.preventDefault();
-    setTasks([...tasks, { ...newTask, id: crypto.randomUUID() }]);
+    dispatch({ type: 'ADD_TASK', payload:{ title: newTask.title, description: newTask.description, state: false } });
     setNewTask({ title: "", description: "", state: false });
-    localStorage.setItem('tasks', JSON.stringify([...tasks, { ...newTask, id: crypto.randomUUID() }]));
     setSnackBarInfo({ ...SnackBarInfo, open: true, message: "Task added successfully!", severity: "success" });
   };
 
