@@ -4,7 +4,7 @@ import { useSnackBar } from '../context/contextTasks';
 
 export default function Snackbars() {
   const { SnackBarInfo , setSnackBarInfo } = useSnackBar();
-  const handleClose = (event, reason) => {
+  const handleClose = (reason) => {
     if (reason === 'clickaway') {
       return;
     }

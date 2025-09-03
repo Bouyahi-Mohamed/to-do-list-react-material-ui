@@ -1,14 +1,14 @@
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
-import { useState ,useReducer } from "react";
-import { useTasks ,useSnackBar} from "../context/contextTasks";
+import { useState , } from "react";
+import { useDispatch ,useSnackBar} from "../context/contextTasks";
 
 
 
 
 export default function AddTask() {
-    const { state, dispatch } = useTasks();
+  const dispatch = useDispatch();
   const [newTask, setNewTask] = useState({ title: "", description: "", state: false });
   const { SnackBarInfo, setSnackBarInfo } = useSnackBar();
 

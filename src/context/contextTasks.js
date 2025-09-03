@@ -7,7 +7,8 @@ const navbarStorage = JSON.parse(localStorage.getItem('navbar')) || 'all';
 // === end localStorage content ===
 
 // === start createContext ===
-const TasksContext = createContext({ tasks: storedTasks, setTasks: () => {} });
+const TasksContext = createContext(storedTasks);
+const dispatchContext = createContext(() => {});
 const NavBotsContext = createContext({ navBots: navbarStorage, setNavBots: () => {} });
 const SnackBarContext = createContext({ open: false, message: '', severity: 'success' });
 const DialogDeleteContext = createContext({ open: false, id: null, title: '', message: '', handleAction: () => {} });
@@ -16,10 +17,12 @@ const DialogEditContext = createContext({ open: false, id: null, title: '', titl
 
 // === start Tasks Provider ===
 const TasksProvider = ({ children }) => {
-  const [tasks, dispatch] = useReducer(tasksReducer, { tasks: storedTasks });
+  const [tasks, dispatch] = useReducer(tasksReducer, storedTasks);
   return (
-    <TasksContext.Provider value={{ tasks, dispatch }}>
-      {children}
+    <TasksContext.Provider value={tasks}>
+      <dispatchContext.Provider value={dispatch}>
+        {children}
+      </dispatchContext.Provider>
     </TasksContext.Provider>
   );
 };
@@ -73,6 +76,9 @@ const DialogEditProvider = ({ children }) => {
 const useTasks = () => {
   return useContext(TasksContext);
 };
+const useDispatch = () => {
+  return useContext(dispatchContext);
+};
 
 const useNavBots = () => {
   return useContext(NavBotsContext);
@@ -92,4 +98,4 @@ const useDialogEdit = () => {
 
 // === end custom hooks ===
 
-export { TasksContext, NavBotsContext, SnackBarContext, DialogDeleteContext, DialogEditContext, TasksProvider, NavBotsProvider, SnackBarProvider, DialogDeleteProvider, DialogEditProvider, useTasks, useNavBots, useSnackBar, useDialogDelete, useDialogEdit };
+export { TasksContext, useDispatch, NavBotsContext, SnackBarContext, DialogDeleteContext, DialogEditContext, TasksProvider, NavBotsProvider, SnackBarProvider, DialogDeleteProvider, DialogEditProvider, useTasks, useNavBots, useSnackBar, useDialogDelete, useDialogEdit };

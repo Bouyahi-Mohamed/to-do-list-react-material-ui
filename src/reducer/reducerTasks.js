@@ -1,41 +1,33 @@
-
-export default function tasksReducer(state= { tasks: [] }, action) {
+export default function tasksReducer(currentTasks, action) {
   switch (action.type) {
-    case 'ADD_TASK':
-      const newTask = { id: crypto.randomUUID(), title: action.payload.title, description: action.payload.description, state: false };
-
-    localStorage.setItem('tasks', JSON.stringify([...(state.tasks || []), newTask]));
-      return {
-        ...state,
-        tasks: [...(state.tasks || []), newTask],
+    case "ADD_TASK": {
+      const newTask = {
+        id: crypto.randomUUID(),
+        title: action.payload.title,
+        description: action.payload.description,
+        state: false,
       };
-    case 'REMOVE_TASK': {
-      const updatedTasks = state.tasks.filter((task) => task.id !== action.payload);
-      localStorage.setItem('tasks', JSON.stringify(updatedTasks));
-      return {
-        ...state,
-        tasks: updatedTasks,
-      };
+      const updatedTasks = [...currentTasks, newTask];
+      localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+      return updatedTasks;
     }
-    case 'EDIT_TASK': {
-      const updatedTasks = state.tasks.map((task) =>
+    case "REMOVE_TASK": {
+      const updatedTasks = currentTasks.filter((task) => task.id !== action.payload);
+      localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+      return updatedTasks;
+    }
+    case "EDIT_TASK": {
+      const updatedTasks = currentTasks.map((task) =>
         task.id === action.payload.id ? { ...task, ...action.payload } : task
       );
-      localStorage.setItem('tasks', JSON.stringify(updatedTasks));
-      return {
-        ...state,
-        tasks: updatedTasks,
-      };
+      localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+      return updatedTasks;
     }
-    case 'SET_TASKS': {
-      const updatedTasks = action.payload;
-      localStorage.setItem('tasks', JSON.stringify(updatedTasks));
-      return {
-        ...state,
-        tasks: updatedTasks,
-      };
+    case "SET_TASKS": {
+      localStorage.setItem("tasks", JSON.stringify(action.payload));
+      return action.payload;
     }
     default:
-      return state;
+      return currentTasks;
   }
 }

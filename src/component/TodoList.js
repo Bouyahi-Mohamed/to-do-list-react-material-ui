@@ -11,16 +11,17 @@ import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import CloseIcon from '@mui/icons-material/Close';
 //import tasks data
-import { useTasks,useSnackBar,useNavBots,useDialogDelete,useDialogEdit} from "../context/contextTasks";
+import { useTasks,useDispatch,useSnackBar,useNavBots,useDialogDelete,useDialogEdit} from "../context/contextTasks";
 import{ useState } from "react";
 
 
 
 // Use React state for cards
 export default function TodoList() {
-  const { tasks, dispatch } = useTasks();
+  const tasks  = useTasks();
+  const dispatch = useDispatch();
   const { navBots } = useNavBots();
-  const [selectedCard, setSelectedCard] = useState(0);
+  const [selectedCard] = useState(0);
   return (
     <Box
       sx={{
@@ -36,7 +37,7 @@ export default function TodoList() {
 
       }}>
 
-  <RenderTodoList tasks={tasks.tasks} navBots={navBots} selectedCard={selectedCard} dispatch={dispatch}/>
+  <RenderTodoList tasks={tasks} navBots={navBots} selectedCard={selectedCard} dispatch={dispatch}/>
 
     </Box>
   );
@@ -44,7 +45,7 @@ export default function TodoList() {
 
 // delete task button with dialog
 export function DeleteBtn({ id }) {
-  const { tasks, dispatch } = useTasks();
+  const dispatch = useDispatch();
   const { SnackBarInfo, setSnackBarInfo } = useSnackBar();
   const { DialogDeleteInfo, setDialogDeleteInfo } = useDialogDelete();
 
@@ -88,10 +89,11 @@ const handleDeleteClick = () => {
 export  function EditBtn({ id }) {
   const { SnackBarInfo, setSnackBarInfo } = useSnackBar();
   const { DialogEditInfo, setDialogEditInfo } = useDialogEdit();
-  const { tasks, dispatch } = useTasks();
+  const tasks  = useTasks();
+  const dispatch = useDispatch();
 
   const handleClickOpen = () => {
-    const taskToEdit = tasks.tasks.find(t => t.id === id);
+    const taskToEdit = tasks.find(t => t.id === id);
     setDialogEditInfo({
       ...DialogEditInfo,
       open: true,
@@ -129,8 +131,9 @@ export  function EditBtn({ id }) {
   
 // check button that defines that action done or undone
 function CheckBtn({ id }) {
-  const { tasks, dispatch } = useTasks();
-  const task = tasks.tasks.find((t) => t.id === id);
+  const tasks  = useTasks();
+  const dispatch = useDispatch();
+  const task = tasks.find((t) => t.id === id);
   const { SnackBarInfo, setSnackBarInfo } = useSnackBar();
 
   if (!task) return null;
@@ -148,7 +151,7 @@ function CheckBtn({ id }) {
           localStorage.setItem(
             "tasks",
             JSON.stringify(
-              tasks.tasks.map((c) =>
+              tasks.map((c) =>
                 c.id === task.id ? { ...c, state: !c.state } : c
               )
             )
@@ -185,7 +188,7 @@ export function RenderTodoList({ tasks, navBots, selectedCard, setTasks }) {
 
 
 // card component that will rendered
-function TodoCard({ task, setTasks ,selectedCard,index}) {
+function TodoCard({ task ,selectedCard,index}) {
   
   return (
     <>
