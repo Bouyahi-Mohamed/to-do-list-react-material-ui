@@ -148,7 +148,7 @@ function CheckBtn({ id }) {
         }}
         aria-label={task.ischecked ? "check" : "close"}
         onClick={() => {
-          dispatch({ type: 'EDIT_TASK', payload: { id: task.id, ischecked: !task.ischecked } });
+          dispatch({ type: 'TOGGLE_TASK', payload: { id: task.id } });
           setSnackBarInfo({ ...SnackBarInfo, open: true, message: task.ischecked ? "Task marked as undone!" : "Task marked as done!", severity: "success" });
         }}
       >

@@ -23,9 +23,15 @@ export default function tasksReducer(currentTasks, action) {
       localStorage.setItem("tasks", JSON.stringify(updatedTasks));
       return updatedTasks;
     }
-    case "SET_TASKS": {
-      localStorage.setItem("tasks", JSON.stringify(action.payload));
-      return action.payload;
+    case "TOGGLE_TASK": {
+      const updatedTasks = currentTasks.map(task => {
+        if (task.id === action.payload.id) {
+          return { ...task, ischecked: !task.ischecked };
+        }
+        return task;
+      });
+      localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+      return updatedTasks;
     }
     default:
       return currentTasks;
