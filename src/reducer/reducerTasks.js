@@ -5,7 +5,7 @@ export default function tasksReducer(currentTasks, action) {
         id: crypto.randomUUID(),
         title: action.payload.title,
         description: action.payload.description,
-        state: false,
+        ischecked: false,
       };
       const updatedTasks = [...currentTasks, newTask];
       localStorage.setItem("tasks", JSON.stringify(updatedTasks));

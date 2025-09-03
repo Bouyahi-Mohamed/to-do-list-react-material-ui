@@ -143,24 +143,16 @@ function CheckBtn({ id }) {
       <IconButton
         sx={{
           backgroundColor: "#ffffffff",
-          color: task.state ? "red" : "green",
+          color: task.ischecked ? "red" : "green",
           ":hover": { backgroundColor: "lightgray" },
         }}
-        aria-label={task.state ? "check" : "close"}
+        aria-label={task.ischecked ? "check" : "close"}
         onClick={() => {
-          localStorage.setItem(
-            "tasks",
-            JSON.stringify(
-              tasks.map((c) =>
-                c.id === task.id ? { ...c, state: !c.state } : c
-              )
-            )
-          );
-          dispatch({ type: 'EDIT_TASK', payload: { id: task.id, state: !task.state } });
-          setSnackBarInfo({ ...SnackBarInfo, open: true, message: task.state ? "Task marked as undone!" : "Task marked as done!", severity: "success" });
+          dispatch({ type: 'EDIT_TASK', payload: { id: task.id, ischecked: !task.ischecked } });
+          setSnackBarInfo({ ...SnackBarInfo, open: true, message: task.ischecked ? "Task marked as undone!" : "Task marked as done!", severity: "success" });
         }}
       >
-        {task.state ? <CloseIcon /> : <CheckIcon />}
+        {task.ischecked ? <CloseIcon /> : <CheckIcon />}
       </IconButton>
     </>
   );
@@ -173,9 +165,9 @@ export function RenderTodoList({ tasks, navBots, selectedCard, setTasks }) {
       {tasks
         .filter((task) => {
           if (navBots === "undone") {
-            return task.state === false;
+            return task.ischecked === false;
           } else if (navBots === "done") {
-            return task.state === true;
+            return task.ischecked === true;
           }
           return true;
         })
@@ -197,7 +189,7 @@ function TodoCard({ task ,selectedCard,index}) {
             data-active={selectedCard === index ? "" : undefined}
             sx={{
               height: "100%",
-              backgroundColor: task.state ? 'green' : "#4994bcff",
+              backgroundColor: task.ischecked ? 'green' : "#4994bcff",
             }}
           >
             <CardContent sx={{ height: "100%", color: "#ffffffff" }}>

@@ -9,13 +9,13 @@ import { useDispatch ,useSnackBar} from "../context/contextTasks";
 
 export default function AddTask() {
   const dispatch = useDispatch();
-  const [newTask, setNewTask] = useState({ title: "", description: "", state: false });
+  const [newTask, setNewTask] = useState({ title: "", description: "", ischecked: false });
   const { SnackBarInfo, setSnackBarInfo } = useSnackBar();
 
   const handleAddTask = (event) => {
     event.preventDefault();
-    dispatch({ type: 'ADD_TASK', payload:{ title: newTask.title, description: newTask.description, state: false } });
-    setNewTask({ title: "", description: "", state: false });
+    dispatch({ type: 'ADD_TASK', payload:{ title: newTask.title, description: newTask.description, ischecked: false } });
+    setNewTask({ title: "", description: "", ischecked: false });
     setSnackBarInfo({ ...SnackBarInfo, open: true, message: "Task added successfully!", severity: "success" });
   };
 
