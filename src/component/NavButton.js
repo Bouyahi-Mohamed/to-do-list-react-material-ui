@@ -1,58 +1,45 @@
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import Box from '@mui/material/Box';
-import { useNavBots,useSnackBar } from '../context/contextTasks';
-export default function ListButton() {
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import { useNavBots, useSnackBar } from '../context/contextTasks';
+
+export default function NavButton() {
   const { navBots, setNavBots } = useNavBots();
   const { SnackBarInfo, setSnackBarInfo } = useSnackBar();
 
-  const handleChange = (event, newAlignment) => {
-    if (newAlignment !== null) {
-      setNavBots(newAlignment);
-      setSnackBarInfo({ ...SnackBarInfo, open: true, message: `Navigation set to ${newAlignment}`, severity: "info" });
-    }
+  const buttons = [
+    { label: 'All', value: 'all' },
+    { label: 'Done', value: 'done' },
+    { label: 'Undone', value: 'undone' }
+  ];
+
+  const handleClick = (value) => {
+    setNavBots(value);
+    setSnackBarInfo({ ...SnackBarInfo, open: true, message: `Navigation set to ${value}`, severity: "info" });
   };
 
   return (
-    <Box  sx={{
-        display: 'flex',
-        justifyContent: 'center',
-    
-      my: 2
-      }}>
-    <ToggleButtonGroup
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        "& .MuiToggleButton-root": {
-          transition: "background-color 120ms, color 120ms, border-color 120ms",
-        },
-        "& .MuiToggleButton-root:hover": {
-          backgroundColor: "#3c29eeff",
-          color: "white",
-          borderColor: "none",
-        },
-        "& .Mui-selected": {
-          color: "white",
-          backgroundColor: "#6b7070ff",
-        },
-      }}
-      value={navBots}
-      exclusive // This prop makes sure only one button can be selected at a time
-      onChange={handleChange}
-      aria-label="Platform"
-      color="white"
-    >
-      <ToggleButton sx={{ backgroundColor: navBots === 'all' ? "#3c29eeff" : 'primary.main' ,color: 'white'}} value='all' onClick={() => {setNavBots('all')
-        localStorage.setItem('navbar', JSON.stringify('all'));
-      }}>All</ToggleButton>
-      <ToggleButton sx={{ backgroundColor: navBots === 'done' ? "#3c29eeff" : 'primary.main' ,color: 'white'}} value='done' onClick={() => {setNavBots('done')
-        localStorage.setItem('navbar', JSON.stringify('done'));
-      }}>Done</ToggleButton>
-      <ToggleButton sx={{ backgroundColor: navBots === 'undone' ? "#3c29eeff" : 'primary.main' ,color: 'white'}} value='undone' onClick={() => {setNavBots('undone')
-        localStorage.setItem('navbar', JSON.stringify('undone'));
-      }}>Undone</ToggleButton>
-    </ToggleButtonGroup>
-</Box>  
+    <Stack direction="row" spacing={2} sx={{ mb: 3, justifyContent: 'center' }}>
+      {buttons.map(btn => (
+        <Button
+          key={btn.value}
+          variant={navBots === btn.value ? 'contained' : 'outlined'}
+          color={navBots === btn.value ? 'primary' : 'inherit'}
+          sx={{
+            borderRadius: 2,
+            boxShadow: navBots === btn.value ? 3 : 0,
+            fontWeight: navBots === btn.value ? 700 : 400,
+            textTransform: 'capitalize',
+            transition: 'box-shadow 0.2s, background 0.2s',
+            ':hover': {
+              boxShadow: 4,
+              backgroundColor: navBots === btn.value ? 'primary.main' : 'grey.100',
+            },
+          }}
+          onClick={() => handleClick(btn.value)}
+        >
+          {btn.label}
+        </Button>
+      ))}
+    </Stack>
   );
 }

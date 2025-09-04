@@ -184,12 +184,14 @@ function TodoCard({ task ,selectedCard,index}) {
   
   return (
     <>
-       <Card key={task.id}>
+       <Card key={task.id} sx={{ borderRadius: 2, boxShadow: 3, mb: 2 }}>
           <CardActionArea
             data-active={selectedCard === index ? "" : undefined}
             sx={{
               height: "100%",
               backgroundColor: task.ischecked ? 'green' : "#4994bcff",
+              transition: "box-shadow 0.2s, transform 0.2s",
+                ":hover": { boxShadow: 6, transform: "scale(1.02)" },
             }}
           >
             <CardContent sx={{ height: "100%", color: "#ffffffff" }}>
@@ -218,3 +220,4 @@ function TodoCard({ task ,selectedCard,index}) {
 
   )
 }
+
