@@ -1,20 +1,21 @@
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { Button } from '@mui/material';
+
 import './App.css';
 import { ThemeProviderWrapper } from './Contexts/Theme';
-import { Typography } from '@mui/material';
+// matieral ui components
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+// import components
+import BasicCard from './components/Card';
+
 
 function App() {
   return (
     <ThemeProviderWrapper>
-      <div className="App">
-      <Typography variant="h1"  fontFamily={'IBM'}>السلام عليكم</Typography>
-      <Typography variant="h1" fontFamily={'Ubuntu'}>it is good </Typography>
-
-
-        <h1>Welcome to the Practice UI</h1>
-        <Button variant="contained"><AccountCircleIcon /> Profile</Button>
-      </div>
+       <Container maxWidth="false" >
+        <Box sx={{ bgcolor: '#1976d2', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <BasicCard />
+        </Box>
+      </Container>
     </ThemeProviderWrapper>
   );
 }
