@@ -1,5 +1,5 @@
 // React
-import { useState } from "react";
+import { useState ,useEffect} from "react";
 // Material UI components
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -9,6 +9,9 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import { Grid } from "@mui/material";
+import TextField from '@mui/material/TextField';
+// external libraries
+import axios from 'axios';
 
 
 const bull = (
@@ -20,21 +23,30 @@ const bull = (
   </Box>
 );
 
-export default function BasicCard({ weatherData }) {
-  const [lang, setLang] = useState("ar");
+export default function BasicCard() {
+
+    const [lang, setLang] = useState("ar");
+    const [searchTerm, setSearchTerm] = useState("");
+    const [weatherData, setWeatherData] = useState(null);
+
+  useEffect(() => {
+    // Example API call using axios
+    axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${searchTerm ? searchTerm : "tunis"}&appid=c680c19447bdb188d17ae242bb0a7c5b&lang=${lang}`)
+      .then(response => {
+        // Handle the API response
+        setWeatherData(response.data);
+      })
+      .catch(error => {
+        // Handle any errors
+        console.error('Error fetching data:', error);
+      });
+  }, [lang, searchTerm]);
+
   function handleChangeLang(lang) {
     setLang(lang);
   }
-  console.log(weatherData);
-  function cityNameByLang(lang) {
-    switch (lang) {
-      case "ar":
-        return "تونس";
-      case "en":
-        return "Tunis";
-      default:
-        return "Tunis";
-    }
+  function handleChangeSearchTerm(event) {
+    setSearchTerm(event.target.value);
   }
   function date(lang) {
     const date = new Date();
@@ -55,18 +67,7 @@ export default function BasicCard({ weatherData }) {
         return Math.round((weatherTemp - 273.15) * 9/5 + 32) + "°F";
     }
   }
-  function weatherDescriptionByLang(lang, weatherDescription) {
-    switch (lang) {
-      case "ar":
-        return weatherDescription || "مشمس في الغالب";
-      case "en":
-        return weatherDescription || "Mostly Sunny";
-      case "fr":
-        return weatherDescription || "Principalement ensoleillé";
-      default:
-        return weatherDescription || "Mostly Sunny";
-    }
-  }
+ 
   function minMaxByLang(lang, weatherTempmin, weatherTempmax) {
     switch (lang) {
       case "ar":
@@ -97,7 +98,7 @@ export default function BasicCard({ weatherData }) {
                 fontSize: "48px",
               }}
             >
-              {cityNameByLang(lang)}
+              {weatherData?.name}
             </Typography>
             <Typography
               sx={{
@@ -148,7 +149,7 @@ export default function BasicCard({ weatherData }) {
                   my: 1
                 }}
               >
-                {weatherDescriptionByLang(lang, weatherData?.weather?.[0]?.description)}
+                {weatherData?.weather ? weatherData.weather[0].description : ""}
               </Typography>
               <Typography
                 sx={{
@@ -230,7 +231,10 @@ export default function BasicCard({ weatherData }) {
         >
           French
         </Button>
-        
+        <TextField value={searchTerm} id="outlined-basic" label={lang === "ar" ? "بحث" : lang === "en" ? "Search" : "recherche"} variant="filled" sx={{ input: { color: "white" }, label: { color: "white" }, "& .MuiInputLabel-root.Mui-focused": {
+      color: "white", 
+    },}} onChange={handleChangeSearchTerm} />
+
       </CardActions>
     </Card>
   );
