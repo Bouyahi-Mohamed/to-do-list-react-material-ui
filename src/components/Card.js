@@ -1,4 +1,6 @@
-import * as React from "react";
+// React
+import { useState } from "react";
+// Material UI components
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -7,6 +9,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import { Grid } from "@mui/material";
+
 
 const bull = (
   <Box
@@ -17,9 +20,67 @@ const bull = (
   </Box>
 );
 
-export default function BasicCard() {
+export default function BasicCard({ weatherData }) {
+  const [lang, setLang] = useState("ar");
+  function handleChangeLang(lang) {
+    setLang(lang);
+  }
+  console.log(weatherData);
+  function cityNameByLang(lang) {
+    switch (lang) {
+      case "ar":
+        return "تونس";
+      case "en":
+        return "Tunis";
+      default:
+        return "Tunis";
+    }
+  }
+  function date(lang) {
+    const date = new Date();
+    const options = { year: "numeric", month: "numeric", day: "numeric" };
+    return lang === "ar"
+      ? date.toLocaleDateString("ar-TN", options)
+      : date.toLocaleDateString("en-US", options);
+  }
+  function temperatureByLang(lang, weatherTemp) {
+    switch (lang) {
+      case "ar":
+        return Math.round((weatherTemp - 273.15)) + "°C";
+      case "en":
+        return Math.round((weatherTemp - 273.15) * 9/5 + 32) + "°F";
+      case "fr":
+        return Math.round((weatherTemp - 273.15)) + "°C";
+      default:
+        return Math.round((weatherTemp - 273.15) * 9/5 + 32) + "°F";
+    }
+  }
+  function weatherDescriptionByLang(lang, weatherDescription) {
+    switch (lang) {
+      case "ar":
+        return weatherDescription || "مشمس في الغالب";
+      case "en":
+        return weatherDescription || "Mostly Sunny";
+      case "fr":
+        return weatherDescription || "Principalement ensoleillé";
+      default:
+        return weatherDescription || "Mostly Sunny";
+    }
+  }
+  function minMaxByLang(lang, weatherTempmin, weatherTempmax) {
+    switch (lang) {
+      case "ar":
+        return `الصغرى ${temperatureByLang(lang, weatherTempmin)} || الكبرى ${temperatureByLang(lang, weatherTempmax)}`;
+      case "en":
+        return `Low ${temperatureByLang(lang, weatherTempmin)} || High ${temperatureByLang(lang, weatherTempmax)}`;
+      case "fr":
+        return `Min ${temperatureByLang(lang, weatherTempmin)} || Max ${temperatureByLang(lang, weatherTempmax)}`;
+      default:
+        return `Low ${temperatureByLang(lang, weatherTempmin)} || High ${temperatureByLang(lang, weatherTempmax)}`;
+    }
+  }
   return (
-    <Card sx={{ minWidth: "35%", direction: "rtl", bgcolor: "#035ab0ff" }}>
+    <Card sx={{ minWidth: "35%", bgcolor: "#035ab0ff" }} dir={lang === "ar" ? "rtl" : "ltr"}>
       <CardContent>
         <Typography gutterBottom sx={{ color: "text.secondary", fontSize: 14 }}>
           <Stack
@@ -36,7 +97,7 @@ export default function BasicCard() {
                 fontSize: "48px",
               }}
             >
-              الرياض
+              {cityNameByLang(lang)}
             </Typography>
             <Typography
               sx={{
@@ -47,7 +108,7 @@ export default function BasicCard() {
               }}
             >
               {" "}
-              2025/01/12
+              {date(lang)}
             </Typography>
           </Stack>
           <hr />
@@ -71,7 +132,7 @@ export default function BasicCard() {
                   }}
                 >
                   {" "}
-                  38{" "}
+                  {temperatureByLang(lang, weatherData?.main?.temp)}{" "}
                 </Typography>
                 <img
                   src="https://ssl.gstatic.com/onebox/weather/64/sunny.png"
@@ -87,7 +148,7 @@ export default function BasicCard() {
                   my: 1
                 }}
               >
-                مشمس في الغالب
+                {weatherDescriptionByLang(lang, weatherData?.weather?.[0]?.description)}
               </Typography>
               <Typography
                 sx={{
@@ -97,7 +158,7 @@ export default function BasicCard() {
                   fontSize: "16px",
                 }}
               >
-                الصغرى 30 || الكبرى 37{" "}
+                {minMaxByLang(lang, weatherData?.main?.temp_min, weatherData?.main?.temp_max)}
               </Typography>
             </Grid>
             <Grid
@@ -115,10 +176,11 @@ export default function BasicCard() {
         </Typography>
       </CardContent>
       <CardActions
+        dir={lang === "ar" ? "rtl" : "ltr"}
         sx={{
+
           bgcolor:  "#1565c0",
           display: "flex",
-          justifyContent: "flex-end",
           mb: 2,
           width: "90%",
           mx: "auto",
@@ -126,7 +188,8 @@ export default function BasicCard() {
           gap: 2,
         }}
       >
-        <Button
+      <Button
+          value="ar"
           variant="text"
           sx={{
             color: "white",
@@ -135,12 +198,13 @@ export default function BasicCard() {
             fontSize: "16px",
           }}
           size="small"
-
+          onClick={() => handleChangeLang("ar")}
         >
-          Arabic
+          العربية
         </Button>
         <Button
-            variant="text"
+          value="en"
+          variant="text"
           sx={{
             color: "white",
             fontFamily: "IBM",
@@ -148,11 +212,13 @@ export default function BasicCard() {
             fontSize: "16px",
           }}
           size="small"
+          onClick={() => handleChangeLang("en")}
         >
           English
         </Button>
         <Button
-            variant="text"
+          value="fr"
+          variant="text"
           sx={{
             color: "white",
             fontFamily: "IBM",
@@ -160,9 +226,11 @@ export default function BasicCard() {
             fontSize: "16px",
           }}
           size="small"
+          onClick={() => handleChangeLang("fr")}
         >
           French
         </Button>
+        
       </CardActions>
     </Card>
   );
