@@ -24,14 +24,18 @@ const bull = (
 );
 
 export default function BasicCard() {
-
+    let cancelAxios;
     const [lang, setLang] = useState("ar");
     const [searchTerm, setSearchTerm] = useState("");
     const [weatherData, setWeatherData] = useState(null);
 
   useEffect(() => {
     // Example API call using axios
-    axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${searchTerm ? searchTerm : "tunis"}&appid=c680c19447bdb188d17ae242bb0a7c5b&lang=${lang}`)
+    axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${searchTerm ? searchTerm : "tunis"}&appid=c680c19447bdb188d17ae242bb0a7c5b&lang=${lang}`, {
+      cancelToken: new axios.CancelToken((c) => {
+        cancelAxios = c;
+      })
+    })
       .then(response => {
         // Handle the API response
         setWeatherData(response.data);
@@ -40,6 +44,13 @@ export default function BasicCard() {
         // Handle any errors
         console.error('Error fetching data:', error);
       });
+      // Cleanup function to cancel previous request if component unmounts or before next effect runs
+    return () => {
+      if (cancelAxios) {
+        console.log('Canceling previous request');
+        cancelAxios();
+      }
+    };
   }, [lang, searchTerm]);
 
   function handleChangeLang(lang) {
