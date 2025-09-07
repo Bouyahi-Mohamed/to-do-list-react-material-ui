@@ -1,7 +1,6 @@
 // React
-import { useState ,useEffect} from "react";
+import { useState, useEffect, useRef } from "react";
 // Material UI components
-import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -14,26 +13,19 @@ import TextField from '@mui/material/TextField';
 import axios from 'axios';
 
 
-const bull = (
-  <Box
-    component="span"
-    sx={{ display: "inline-block", mx: "2px", transform: "scale(0.8)" }}
-  >
-    •
-  </Box>
-);
+
 
 export default function BasicCard() {
-    let cancelAxios;
-    const [lang, setLang] = useState("ar");
-    const [searchTerm, setSearchTerm] = useState("");
-    const [weatherData, setWeatherData] = useState(null);
+  const cancelAxios = useRef(null); // <-- useRef for cancel function
+  const [lang, setLang] = useState("ar");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [weatherData, setWeatherData] = useState(null);
 
   useEffect(() => {
     // Example API call using axios
     axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${searchTerm ? searchTerm : "tunis"}&appid=c680c19447bdb188d17ae242bb0a7c5b&lang=${lang}`, {
       cancelToken: new axios.CancelToken((c) => {
-        cancelAxios = c;
+        cancelAxios.current = c; // <-- store in ref
       })
     })
       .then(response => {
@@ -46,9 +38,9 @@ export default function BasicCard() {
       });
       // Cleanup function to cancel previous request if component unmounts or before next effect runs
     return () => {
-      if (cancelAxios) {
+      if (cancelAxios.current) {
         console.log('Canceling previous request');
-        cancelAxios();
+        cancelAxios.current();
       }
     };
   }, [lang, searchTerm]);
