@@ -11,6 +11,8 @@ import { Grid } from "@mui/material";
 import TextField from '@mui/material/TextField';
 // external libraries
 import axios from 'axios';
+//images
+import weatherIcon from '../images/weatherIcon.jpg';
 
 
 
@@ -139,7 +141,7 @@ export default function BasicCard() {
                   {temperatureByLang(lang, weatherData?.main?.temp)}{" "}
                 </Typography>
                 <img
-                  src="https://ssl.gstatic.com/onebox/weather/64/sunny.png"
+                  src={`https://openweathermap.org/img/wn/${weatherData?.weather[0]?.icon}@2x.png`}
                   alt="weather icon"
                 />
               </Stack>
@@ -172,8 +174,9 @@ export default function BasicCard() {
               alignItems="center"
             >
               <img
-                src="https://ssl.gstatic.com/onebox/weather/64/sunny.png"
+                src={weatherIcon}
                 alt="weather icon"
+                style={{ width: "200px", height: "200px" ,backgroundColor:"white", borderRadius:"50%", boxShadow:"0px 0px 10px rgba(255, 255, 255, 0.5)"}}
               />
             </Grid>
           </Grid>
