@@ -1,8 +1,13 @@
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
+// import redux state adn slice
 
-const DemoPaper = styled(Box)(() => ({
+import { useSelector } from 'react-redux';
+
+
+
+const DemoBtn = styled(Box)(() => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-end',
@@ -16,13 +21,14 @@ const DemoPaper = styled(Box)(() => ({
   backgroundColor: 'black',
 }));
 
-export default function InputText({ value, result }) {
+export default function InputText() {
+  const state = useSelector((state)=> state.operations)
   return (
     <Stack direction="row" alignItems="flex-end" justifyContent="center" >
-      <DemoPaper  variant="elevation">
-        <label style={{ color: 'grey', fontSize: '24px' }}>{value||'0'}</label>
-        <label style={{ color: 'lightgray', fontSize: '48px' }}>{result||"0"}</label>
-      </DemoPaper>
+      <DemoBtn  variant="elevation">
+        <label style={{ color: 'grey', fontSize: '24px' }}>{state.value||'0'}</label>
+        <label style={{ color: 'lightgray', fontSize: '48px' }}>{state.result||"0"}</label>
+      </DemoBtn>
     </Stack>
   );
 }
