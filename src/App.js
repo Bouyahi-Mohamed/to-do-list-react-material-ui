@@ -7,6 +7,7 @@ import reducer from "./reducer/resulteReducer";
 
 
 
+
 function App() {
   const [state, dispatch] = useReducer(reducer, { value: '', result: '' });
 

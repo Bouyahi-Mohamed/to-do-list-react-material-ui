@@ -1,6 +1,5 @@
   import Box from "@mui/material/Box";
   import Grid from "@mui/material/Grid";
-  import Paper from "@mui/material/Paper";
   import Button from "@mui/material/Button";
 
   function Item({ children , itemColor, dispatch}) {
