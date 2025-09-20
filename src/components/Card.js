@@ -1,5 +1,5 @@
 // React
-import { useState, useEffect, useRef } from "react";
+import {useEffect } from "react";
 // Material UI components
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -10,55 +10,39 @@ import Stack from "@mui/material/Stack";
 import { Grid } from "@mui/material";
 import TextField from '@mui/material/TextField';
 // external libraries
-import axios from 'axios';
 //images
 import weatherIcon from '../images/weatherIcon.jpg';
 
 // redux usiing
 import { useSelector, useDispatch } from 'react-redux';
-import { sayHello } from '../features/apiCall/getInfo';
+import { setSearchTerm, setLang ,fetchInfo } from '../features/apiCall/getInfo';
 
 
 
 
 export default function BasicCard() {
-  const cancelAxios = useRef(null); // <-- useRef for cancel function
-  const [lang, setLang] = useState("ar");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [weatherData, setWeatherData] = useState(null);
+  // redux state
+  const lang = useSelector((state) => state.getInfo.lang);
+  const searchTerm = useSelector((state) => state.getInfo.searchTerm);
+  const weatherData = useSelector((state) => state.getInfo.data);
+  // redux dispatch function
   const dispatch = useDispatch();
-    dispatch(sayHello());
-  useEffect(() => {
-    // Dispatch the fetchInfo action
-    // Example API call using axios
-    axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${searchTerm ? searchTerm : "tunis"}&appid=c680c19447bdb188d17ae242bb0a7c5b&lang=${lang}`, {
-      cancelToken: new axios.CancelToken((c) => {
-        cancelAxios.current = c; // <-- store in ref
-      })
-    })
-      .then(response => {
-        // Handle the API response
-        setWeatherData(response.data);
-      })
-      .catch(error => {
-        // Handle any errors
-        console.error('Error fetching data:', error);
-      });
-      // Cleanup function to cancel previous request if component unmounts or before next effect runs
-    return () => {
-      if (cancelAxios.current) {
-        console.log('Canceling previous request');
-        cancelAxios.current();
-      }
-    };
-  }, [lang, searchTerm]);
 
-  function handleChangeLang(lang) {
-    setLang(lang);
+  // fetch weather data when searchTerm or lang changes
+  useEffect(() => {
+    dispatch(fetchInfo({ searchTerm, lang }));
+  }, [searchTerm, lang, dispatch]);
+
+
+// redux action dispatchers search term and lang
+  const handleChangeSearchTerm = (e) => {
+    dispatch(setSearchTerm(e.target.value));
   }
-  function handleChangeSearchTerm(event) {
-    setSearchTerm(event.target.value);
+  const handleChangeLang = (lang) => {
+    dispatch(setLang(lang));
   }
+  
+  // helper functions
   function date(lang) {
     const date = new Date();
     const options = { year: "numeric", month: "numeric", day: "numeric" };
