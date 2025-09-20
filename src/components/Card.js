@@ -14,6 +14,10 @@ import axios from 'axios';
 //images
 import weatherIcon from '../images/weatherIcon.jpg';
 
+// redux usiing
+import { useSelector, useDispatch } from 'react-redux';
+import { sayHello } from '../features/apiCall/getInfo';
+
 
 
 
@@ -22,8 +26,10 @@ export default function BasicCard() {
   const [lang, setLang] = useState("ar");
   const [searchTerm, setSearchTerm] = useState("");
   const [weatherData, setWeatherData] = useState(null);
-
+  const dispatch = useDispatch();
+    dispatch(sayHello());
   useEffect(() => {
+    // Dispatch the fetchInfo action
     // Example API call using axios
     axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${searchTerm ? searchTerm : "tunis"}&appid=c680c19447bdb188d17ae242bb0a7c5b&lang=${lang}`, {
       cancelToken: new axios.CancelToken((c) => {

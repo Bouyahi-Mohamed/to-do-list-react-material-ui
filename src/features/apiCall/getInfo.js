@@ -9,7 +9,7 @@ export const getInfo = createSlice({
   },
   reducers: {
    sayHello: (state) => {
-      state.data = "Hello, World!";
+    alert("Hello from Redux!");
     }
    
    
