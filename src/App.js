@@ -2,7 +2,6 @@
 import './App.css';
 import { ThemeProviderWrapper } from './Contexts/Theme';
 // import React from 'react';
-import { useEffect ,useState} from 'react';
 // matieral ui components
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
