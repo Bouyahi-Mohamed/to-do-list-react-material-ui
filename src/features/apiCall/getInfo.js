@@ -9,6 +9,7 @@ export const fetchInfo = createAsyncThunk(
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${searchTerm ? searchTerm : "tunis"}&appid=c680c19447bdb188d17ae242bb0a7c5b&lang=${lang}`;
     // await axios get request
     const response = await axios.get(url);
+    console.log(response);
 
     // return response data this mean the data will be in action.payload
     return response.data;

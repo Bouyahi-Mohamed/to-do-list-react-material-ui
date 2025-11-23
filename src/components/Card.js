@@ -17,10 +17,51 @@ import weatherIcon from '../images/weatherIcon.jpg';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSearchTerm, setLang ,fetchInfo } from '../features/apiCall/getInfo';
 
+// function need  for Card
+
+// helper functions
+   function date(lang) {
+    const date = new Date();
+    const options = { year: "numeric", month: "numeric", day: "numeric" };
+    return lang === "ar"
+      ? date.toLocaleDateString("ar-TN", options)
+      : date.toLocaleDateString("en-US", options);
+  }
+  function weatherKelvinToCelsius(tempC) {
+    return Math.round(tempC - 273.15) + "°C";
+  }
+  function weatherKelvinToFahrenheit(tempF) {
+    return Math.round((tempF * 9 / 5) + 32) + "°F";
+  }
+  function temperatureByLang(lang, weatherTemp) {
+    switch (lang) {
+      case "ar":
+        return weatherKelvinToCelsius(weatherTemp);
+      case "en":
+        return weatherKelvinToFahrenheit(weatherTemp);
+      case "fr":
+        return weatherKelvinToCelsius(weatherTemp);
+      default:
+        return weatherKelvinToFahrenheit(weatherTemp);
+    }
+  }
+ 
+  function minMaxByLang(lang, weatherTempmin, weatherTempmax) {
+    switch (lang) {
+      case "ar":
+        return `الصغرى ${temperatureByLang(lang, weatherTempmin)} || الكبرى ${temperatureByLang(lang, weatherTempmax)}`;
+      case "en":
+        return `Low ${temperatureByLang(lang, weatherTempmin)} || High ${temperatureByLang(lang, weatherTempmax)}`;
+      case "fr":
+        return `Min ${temperatureByLang(lang, weatherTempmin)} || Max ${temperatureByLang(lang, weatherTempmax)}`;
+      default:
+        return `Low ${temperatureByLang(lang, weatherTempmin)} || High ${temperatureByLang(lang, weatherTempmax)}`;
+    }
+  }
+// end function need  for Card
 
 
-
-export default function BasicCard() {
+  function BasicCard() {
   // redux state
   const lang = useSelector((state) => state.getInfo.lang);
   const searchTerm = useSelector((state) => state.getInfo.searchTerm);
@@ -42,39 +83,7 @@ export default function BasicCard() {
     dispatch(setLang(lang));
   }
   
-  // helper functions
-  function date(lang) {
-    const date = new Date();
-    const options = { year: "numeric", month: "numeric", day: "numeric" };
-    return lang === "ar"
-      ? date.toLocaleDateString("ar-TN", options)
-      : date.toLocaleDateString("en-US", options);
-  }
-  function temperatureByLang(lang, weatherTemp) {
-    switch (lang) {
-      case "ar":
-        return Math.round((weatherTemp - 273.15)) + "°C";
-      case "en":
-        return Math.round((weatherTemp - 273.15) * 9/5 + 32) + "°F";
-      case "fr":
-        return Math.round((weatherTemp - 273.15)) + "°C";
-      default:
-        return Math.round((weatherTemp - 273.15) * 9/5 + 32) + "°F";
-    }
-  }
- 
-  function minMaxByLang(lang, weatherTempmin, weatherTempmax) {
-    switch (lang) {
-      case "ar":
-        return `الصغرى ${temperatureByLang(lang, weatherTempmin)} || الكبرى ${temperatureByLang(lang, weatherTempmax)}`;
-      case "en":
-        return `Low ${temperatureByLang(lang, weatherTempmin)} || High ${temperatureByLang(lang, weatherTempmax)}`;
-      case "fr":
-        return `Min ${temperatureByLang(lang, weatherTempmin)} || Max ${temperatureByLang(lang, weatherTempmax)}`;
-      default:
-        return `Low ${temperatureByLang(lang, weatherTempmin)} || High ${temperatureByLang(lang, weatherTempmax)}`;
-    }
-  }
+  
   return (
     <Card sx={{ minWidth: "35%", bgcolor: "#035ab0ff" }} dir={lang === "ar" ? "rtl" : "ltr"}>
       <CardContent>
@@ -235,3 +244,5 @@ export default function BasicCard() {
     </Card>
   );
 }
+
+export { BasicCard, minMaxByLang, temperatureByLang, date , weatherKelvinToCelsius, weatherKelvinToFahrenheit};
